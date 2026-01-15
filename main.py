@@ -9,7 +9,9 @@ def salvar_arquivo():
         arquivo.write(container)
 
 def abrir_arquivo():
-    pass
+    with open("teste.txt", "r") as arquivo:
+        mostrar = arquivo.read()
+        escrever_texto.insert(1.0, mostrar)
 
 
 
