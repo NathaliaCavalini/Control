@@ -1,0 +1,128 @@
+#:kivy 2.3.0
+#:import MDColorPicker kivymd.uix.pickers.mdcolorpicker.MDColorPicker
+
+ScreenManager:
+    TelaPrincipal:
+        name: 'principal'
+    TelaEditor:
+        name: 'editor'
+
+<TelaPrincipal>:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Meu Bloco de Notas"
+            elevation: 4
+            right_action_items: [["plus", lambda x: root.nova_nota()]]
+
+        ScrollView:
+            MDList:
+                id: lista_notas
+
+<TelaEditor>:
+    canvas.before:
+        Color:
+            rgba: root.cor_fundo
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 1, 1, 1, 0.2 if root.wallpaper else 0
+        Rectangle:
+            source: root.wallpaper
+            pos: self.pos
+            size: self.size
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 16
+        spacing: 12
+
+        MDTopAppBar:
+            title: "Editar Nota"
+            elevation: 2
+            left_action_items: [["arrow-left", lambda x: root.voltar()]]
+            right_action_items: [
+                ["content-save", lambda x: root.salvar()],
+                ["delete", lambda x: root.deletar()]
+            ]
+
+        MDTextField:
+            id: titulo
+            hint_text: "Título"
+            font_name: root.fonte
+            text_color_normal: root.cor_texto
+            mode: "rectangle"
+
+        MDTextField:
+            id: texto
+            hint_text: "Escreva sua nota aqui..."
+            multiline: True
+            font_name: root.fonte
+            text_color_normal: root.cor_texto
+            size_hint_y: 0.35
+
+        MDLabel:
+            text: "Cor de fundo:"
+            size_hint_y: None
+            height: 36
+
+        MDColorPicker:
+            size_hint_y: None
+            height: 220
+            on_color: root.cor_fundo = args[1]
+
+        MDLabel:
+            text: "Senha (opcional)"
+            size_hint_y: None
+            height: 36
+
+        MDTextField:
+            id: senha
+            password: True
+            hint_text: "Digite para proteger esta nota"
+
+        MDLabel:
+            text: "Anexos PDF:"
+            size_hint_y: None
+            height: 36
+
+        MDTextField:
+            id: anexos_lista
+            readonly: True
+            multiline: True
+            size_hint_y: None
+            height: 80
+
+        MDRaisedButton:
+            text: "Adicionar PDF"
+            pos_hint: {"center_x": .5}
+            on_release: root.adicionar_anexo()
+
+        MDLabel:
+            text: "Checklist"
+            size_hint_y: None
+            height: 36
+
+        MDBoxLayout:
+            id: checklist
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 8
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 12
+            padding: [0, 8]
+
+            MDTextField:
+                id: novo_item
+                hint_text: "Novo item"
+                size_hint_x: 0.7
+
+            MDRaisedButton:
+                text: "Adicionar"
+                on_release: root.adicionar_checklist_item()
